@@ -20,7 +20,7 @@ namespace EmployeeProfile
                 Console.WriteLine(employee1.ToString());
                 if (employee1.ComparePositions(employee2))
                 {
-                    Console.WriteLine($"{employee1.Name} is euqal to {employee2.Name}");
+                    Console.WriteLine($"{employee1.Name} {employee1.EmployeePosition} is euqal to {employee2.Name} {employee2.EmployeePosition}");
                 }
 
                 if (employee1.TryChangePosition(PositionWithFixedSalary.Engineer))
@@ -30,10 +30,10 @@ namespace EmployeeProfile
 
                 if (!employee1.ComparePositions(employee2))
                 {
-                    Console.WriteLine($"{employee1.Name} is not euqal to {employee2.Name}");
+                    Console.WriteLine($"{employee1.Name} {employee1.EmployeePosition} is not euqal to {employee2.Name} {employee2.EmployeePosition}");
                 }
 
-                Console.WriteLine(employee2.TryGetSalary());
+                Console.WriteLine("The newbie can recieve a salary: " + employee2.TryGetSalary());
             }
             catch (Exception ex)
             {

@@ -96,7 +96,7 @@ namespace EmployeeProfile.Models
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"{Name} from {DepartmentName} department {EmployeePosition} position earns {Salary}";
+            return $"{Name} from {DepartmentName} department and {EmployeePosition} position earns {Salary}";
         }
     }
 }
