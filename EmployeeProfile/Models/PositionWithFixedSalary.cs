@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace EmployeeProfile.Models
 {
     /// <summary>
-    /// Represents position and salary of an employee
+    /// Represents position and salary of an employee.
     /// </summary>
     internal enum PositionWithFixedSalary
     {

@@ -1,22 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using EmployeeProfile.Helper;
 
 namespace EmployeeProfile.Models
 {
-    internal class Employee
+    /// <summary>
+    /// Class that describes employee.
+    /// </summary>
+    internal class Employee : IEmployee
     {
         private DateTime _lastTimeWhenSalaryWasRecieved;
-        private List<PositionWithFixedSalary> historyOfPositions;
-        public decimal Salary { get; private set; }
-        public string DepartmentName { get; private set; }
-        public string Name { get; private set; }
-        public PositionWithFixedSalary EmployeePosition { get; private set; }
+        private List<PositionWithFixedSalary> _historyOfPositions;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Employee"/> class.
+        /// </summary>
+        /// <param name="name">Name of the employee(without digits).</param>
+        /// <param name="employeePosition">Position and slary of the employee.</param>
+        /// <param name="departmentName">Department name that must contain at least one digit and one letter.</param>
+        /// <exception cref="ArgumentException">throws exception when the input data invalid.</exception>
         public Employee(string name, PositionWithFixedSalary employeePosition, string departmentName)
         {
-            if (!(CheckDepartmentNameForValidity(departmentName) && CheckEmployeeNameForValidity(name)))
+            if (!(EmployeeHelper.CheckDepartmentNameForValidity(departmentName) && EmployeeHelper.CheckEmployeeNameForValidity(name)))
             {
                 throw new ArgumentException($"Wrong input data for the employee {name}");
             }
@@ -24,27 +27,31 @@ namespace EmployeeProfile.Models
             Name = name;
             EmployeePosition = employeePosition;
             DepartmentName = departmentName;
-            Salary = GetSalaryDependsOnPosition(employeePosition);
-            historyOfPositions = new List<PositionWithFixedSalary>();
-            historyOfPositions.Add(employeePosition);
+            Salary = EmployeeHelper.GetSalaryDependsOnPosition(employeePosition);
+            _historyOfPositions = new List<PositionWithFixedSalary>();
+            _historyOfPositions.Add(employeePosition);
             _lastTimeWhenSalaryWasRecieved = DateTime.Now;
         }
 
+        public decimal Salary { get; private set; }
+        public string DepartmentName { get; private set; }
+        public string Name { get; private set; }
+        public PositionWithFixedSalary EmployeePosition { get; private set; }
         public bool TryChangePosition(PositionWithFixedSalary position)
         {
-            if (historyOfPositions.Last() == position )
+            if (_historyOfPositions.Last() == position)
             {
                 return false;
             }
 
-            historyOfPositions.Add(position);
+            _historyOfPositions.Add(position);
             EmployeePosition = position;
             return true;
         }
 
         public bool ThePersonWasInThePosition(PositionWithFixedSalary position)
         {
-            foreach (var positionWithFixedSalary in historyOfPositions)
+            foreach (var positionWithFixedSalary in _historyOfPositions)
             {
                 if (positionWithFixedSalary == position)
                 {
@@ -58,19 +65,21 @@ namespace EmployeeProfile.Models
         /// <summary>
         /// Comapres positions of two employees for equality.
         /// </summary>
-        /// <param name="employee">Employee to compare</param>
-        /// <returns>true if equal, otherwise - false</returns>
+        /// <param name="employee">Employee to compare.</param>
+        /// <returns>true if equal, otherwise - false.</returns>
         public bool ComparePositions(Employee employee)
         {
-            return this.EmployeePosition == employee.EmployeePosition;
+            return EmployeePosition == employee.EmployeePosition;
         }
+
         public bool TryGetSalary()
         {
             var monthWhenSalaryIsAvailable = _lastTimeWhenSalaryWasRecieved.AddMonths(1);
             if (monthWhenSalaryIsAvailable <= DateTime.Now)
             {
                 _lastTimeWhenSalaryWasRecieved = monthWhenSalaryIsAvailable;
-                //sends money
+
+                // somehow sends money.
                 return true;
             }
 
@@ -80,31 +89,6 @@ namespace EmployeeProfile.Models
         public override string ToString()
         {
             return $"{Name} from {DepartmentName} department {EmployeePosition} position earns {Salary}";
-        }
-
-        /// <summary>
-        /// Checks employee name for validity
-        /// </summary>
-        /// <param name="employeePosition">name of the person</param>
-        /// <returns>true when it is valid, otherwise - false</returns>
-        private bool CheckEmployeeNameForValidity(string name)
-        {
-            return name != null && !name!.Any(char.IsDigit);
-        }
-
-        /// <summary>
-        /// Checks department name for validity
-        /// </summary>
-        /// <param name="departmentName">name of department</param>
-        /// <returns>true when it is valid,  otherwise - false</returns>
-        private bool CheckDepartmentNameForValidity(string departmentName)
-        {
-            return departmentName != null && departmentName.Any(char.IsLetter) && departmentName.Any(char.IsDigit);
-        }
-
-        private int GetSalaryDependsOnPosition(PositionWithFixedSalary employeePosition)
-        {
-            return (int)employeePosition;
         }
     }
 }
