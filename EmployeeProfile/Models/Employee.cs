@@ -33,10 +33,19 @@ namespace EmployeeProfile.Models
             _lastTimeWhenSalaryWasRecieved = DateTime.Now;
         }
 
+        /// <inheritdoc/>
         public decimal Salary { get; private set; }
+
+        /// <inheritdoc/>
         public string DepartmentName { get; private set; }
+
+        /// <inheritdoc/>
         public string Name { get; private set; }
+
+        /// <inheritdoc/>
         public PositionWithFixedSalary EmployeePosition { get; private set; }
+
+        /// <inheritdoc/>
         public bool TryChangePosition(PositionWithFixedSalary position)
         {
             if (_historyOfPositions.Last() == position)
@@ -49,7 +58,8 @@ namespace EmployeeProfile.Models
             return true;
         }
 
-        public bool ThePersonWasInThePosition(PositionWithFixedSalary position)
+        /// <inheritdoc/>
+        public bool CheckIfPersonWasInThePosition(PositionWithFixedSalary position)
         {
             foreach (var positionWithFixedSalary in _historyOfPositions)
             {
@@ -62,16 +72,13 @@ namespace EmployeeProfile.Models
             return false;
         }
 
-        /// <summary>
-        /// Comapres positions of two employees for equality.
-        /// </summary>
-        /// <param name="employee">Employee to compare.</param>
-        /// <returns>true if equal, otherwise - false.</returns>
+        /// <inheritdoc/>
         public bool ComparePositions(Employee employee)
         {
             return EmployeePosition == employee.EmployeePosition;
         }
 
+        /// <inheritdoc/>
         public bool TryGetSalary()
         {
             var monthWhenSalaryIsAvailable = _lastTimeWhenSalaryWasRecieved.AddMonths(1);
@@ -86,6 +93,7 @@ namespace EmployeeProfile.Models
             return false;
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return $"{Name} from {DepartmentName} department {EmployeePosition} position earns {Salary}";
